@@ -1,48 +1,3 @@
-'''
-класс Mentor должен стать родительским классом, а от него нужно реализовать наследование классов Lecturer (лекторы) и
-Reviewer (эксперты, проверяющие домашние задания). Очевидно, имя, фамилия и список закрепленных курсов логично
-реализовать на уровне родительского класса. А чем же будут специфичны дочерние классы? Об этом в следующих заданиях.
-
-Задание № 2. Атрибуты и взаимодействие классов.
-В квизе к предыдущей лекции мы реализовали возможность выставлять студентам оценки за домашние задания.
-Теперь это могут делать только Reviewer (реализуйте такой метод)! А что могут делать лекторы? Получать оценки
-за лекции от студентов :) Реализуйте метод выставления оценок лекторам у класса Student (оценки по 10-балльной шкале,
-хранятся в атрибуте-словаре у Lecturer, в котором ключи – названия курсов, а значения – списки оценок). Лектор при этом
-должен быть закреплен за тем курсом, на который записан студент.
-
-Задание № 3. Полиморфизм и магические методы
-Перегрузите магический метод __str__ у всех классов.
-У проверяющих он должен выводить информацию в следующем виде:
-
-print(some_reviewer)
-Имя: Some
-Фамилия: Buddy
-У лекторов:
-
-print(some_lecturer)
-Имя: Some
-Фамилия: Buddy
-Средняя оценка за лекции: 9.9
-А у студентов так:
-
-print(some_student)
-Имя: Ruoy
-Фамилия: Eman
-Средняя оценка за домашние задания: 9.9
-Курсы в процессе изучения: Python, Git
-Завершенные курсы: Введение в программирование
-Реализуйте возможность сравнивать (через операторы сравнения) между собой лекторов по средней оценке за лекции и
-студентов по средней оценке за домашние задания.
-Задание № 4. Полевые испытания
-Создайте по 2 экземпляра каждого класса, вызовите все созданные методы, а также реализуйте две функции:
-
-для подсчета средней оценки за домашние задания по всем студентам в рамках конкретного курса (в качестве аргументов
-принимаем список студентов и название курса);
-для подсчета средней оценки за лекции всех лекторов в рамках курса (в качестве аргумента принимаем список
-лекторов и название курса).
-'''
-
-
 class Student:
 
     def __init__(self, name, surname, gender):
@@ -53,6 +8,36 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
+    def rate_lecturer(self, lecturer, course, grade):
+        if course in (self.courses_in_progress or self.finished_courses) and course in lecturer.courses_attached:
+            if course in lecturer.grades:
+                lecturer.grades[course].append(grade)
+            else:
+                lecturer.grades[course] = [grade]
+        else:
+            print("Ошибка: лектор не закреплен за этим курсом или студент не записан на этот курс")
+
+    def __str__(self):
+        return (f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.average_grade()}\n'
+                f'Курсы в процессе изучения: {", ".join(self.courses_in_progress)}\nЗавершенные курсы: {", ".join(self.finished_courses)}')
+
+    def average_grade(self):
+        avg = 0
+        cnt = 0
+        for grade in self.grades.values():
+            avg += sum(grade)
+            cnt += len(grade)
+        return avg / cnt
+
+    def __lt__(self, other):
+        return self.average_grade() < other.average_grade()
+
+    def __le__(self, other):
+        return self.average_grade() <= other.average_grade()
+
+    def __eq__(self, other):
+        return self.average_grade() == other.average_grade()
+
 
 class Mentor:
 
@@ -60,6 +45,39 @@ class Mentor:
         self.name = name
         self.surname = surname
         self.courses_attached = []
+
+
+class Lecturer(Mentor):
+
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
+
+    def __str__(self):
+        return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_grade()}'
+
+    def average_grade(self):
+        avg = 0
+        cnt = 0
+        for grade in self.grades.values():
+            avg += sum(grade)
+            cnt += len(grade)
+        return avg / cnt
+
+    def __lt__(self, other):
+        return self.average_grade() < other.average_grade()
+
+    def __le__(self, other):
+        return self.average_grade() <= other.average_grade()
+
+    def __eq__(self, other):
+        return self.average_grade() == other.average_grade()
+
+
+class Reviewer(Mentor):
+
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
 
     def rate_hw(self, student, course, grade):
         if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
@@ -69,3 +87,75 @@ class Mentor:
                 student.grades[course] = [grade]
         else:
             return 'Ошибка'
+
+    def __str__(self):
+        return f'Имя: {self.name}\nФамилия: {self.surname}'
+
+def average_grade_students(students, course):
+    total_grades = 0
+    total_students = 0
+    for student in students:
+        if course in student.grades:
+            total_grades += sum(student.grades[course])
+            total_students += len(student.grades[course])
+    return total_grades / total_students if total_students > 0 else 0
+
+
+def average_grade_lecturers(lecturers, course):
+    total_grades = 0
+    total_lecturers = 0
+    for lecturer in lecturers:
+        if course in lecturer.grades:
+            total_grades += sum(lecturer.grades[course])
+            total_lecturers += len(lecturer.grades[course])
+    return total_grades / total_lecturers if total_lecturers > 0 else 0
+
+
+student_1 = Student('Ivan', 'Ivanov', 'male')
+student_1.courses_in_progress += ['Python', 'web_dev']
+student_1.finished_courses += ['Git']
+student_2 = Student('Anna', 'Rozhkova', 'female')
+student_2.courses_in_progress += ['Python','Git']
+student_2.finished_courses += ['web_dev']
+
+lecturer_1 = Lecturer('Oleg', 'Bulygin')
+lecturer_1.courses_attached += ['Python', 'web_dev']
+lecturer_2 = Lecturer('Andrey', 'Melnikov')
+lecturer_2.courses_attached += ['Python', 'Git']
+
+reviewer_1 = Reviewer('Igor', 'Smirnov')
+reviewer_1.courses_attached += ['Python', 'web_dev']
+reviewer_2 = Reviewer('Oksana', 'Karpova')
+reviewer_2.courses_attached += ['Python', 'Git']
+
+student_1.rate_lecturer(lecturer_1, 'Python', 10)
+student_1.rate_lecturer(lecturer_2, 'Python', 9)
+student_2.rate_lecturer(lecturer_1, 'web_dev', 8)
+student_2.rate_lecturer(lecturer_2, 'Git', 6)
+
+reviewer_1.rate_hw(student_1, 'Python', 10)
+reviewer_1.rate_hw(student_1, 'web_dev', 9)
+reviewer_2.rate_hw(student_2, 'Python', 8)
+reviewer_2.rate_hw(student_2, 'Git', 6)
+
+print(student_1)
+print(student_2)
+print(lecturer_1)
+print(lecturer_2)
+print(reviewer_1)
+print(reviewer_2)
+print(student_1 ==student_2)
+print(lecturer_1 < lecturer_2)
+
+
+lst_students = [student_1, student_2]
+lst_lecturers = [lecturer_1, lecturer_2]
+
+print('Средняя оценка студентов по курсу Python:', average_grade_students(lst_students, 'Python'))
+print('Средняя оценка студентов по курсу web_dev:', average_grade_students(lst_students, 'web_dev'))
+print('Средняя оценка студентов по курсу Git:', average_grade_students(lst_students, 'Git'))
+print('Средняя оценка лекторов по курсу Python:', average_grade_lecturers(lst_lecturers, 'Python'))
+print('Средняя оценка лекторов по курсу web_dev:', average_grade_lecturers(lst_lecturers, 'web_dev'))
+print('Средняя оценка лекторов по курсу Git:', average_grade_lecturers(lst_lecturers, 'Git'))
+
+
