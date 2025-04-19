@@ -116,4 +116,40 @@ INSERT INTO tracks (title, duration, album_id, track_number) VALUES
 ('Единственный трек', 210, 7, 1);
 
 
+-- 1. Добавляем треки в альбом "Отель 'Токио'" (album_id = 3) исполнителя ТОКИО
+INSERT INTO tracks (title, duration, album_id, track_number) VALUES
+('myself', 180, 3, 11),      -- ТОКИО (Альтернативный рэп)
+('by myself', 190, 3, 12),
+('bemy self', 200, 3, 13);
 
+-- 2. Добавляем треки в альбом "Зов предков" (album_id = 4) исполнителя Увула
+INSERT INTO tracks (title, duration, album_id, track_number) VALUES
+('myself by', 210, 4, 3),    -- Увула (Этно-электроника)
+('by myself by', 220, 4, 4);
+
+-- 3. Добавляем треки в альбом "Северный ветер" (album_id = 6) исполнителя Марсианские Будни
+INSERT INTO tracks (title, duration, album_id, track_number) VALUES
+('beemy', 230, 6, 3),        -- Марсианские Будни (Инди-рок/Этно-электроника)
+('premyne', 240, 6, 4);
+
+INSERT INTO tracks (title, duration, album_id, track_number) VALUES
+('my own', 210, 3, 14),    -- В альбом "Отель 'Токио'" (album_id = 3)
+('own my', 195, 3, 15),
+('my', 180, 3, 16),
+('oh my god', 240, 3, 17);
+
+-- Добавляем дополнительных исполнителей для жанров
+INSERT INTO artist_genres (artist_id, genre_id) VALUES
+(1, 2), -- Перемотка (Инди-рок) также в Поп
+(3, 1); -- ТОКИО (Альтернативный рэп) также в Инди-рок
+
+-- Добавляем альбом 2020 года с треками
+INSERT INTO albums (title, release_year, cover_url) VALUES
+('Изоляция', 2020, 'https://example.com/izolyaciya.jpg');
+INSERT INTO tracks (title, duration, album_id, track_number) VALUES
+('Карантин', 180, 7, 1),
+('Дистанция', 195, 7, 2);
+
+-- Добавляем треки ТОКИО в сборник
+INSERT INTO compilation_tracks (compilation_id, track_id) VALUES
+(3, 6); -- Отель "Токио" в "Новая волна"
