@@ -3,3 +3,4 @@
 .idea
 main.py
 *.py
+db_crud.py
