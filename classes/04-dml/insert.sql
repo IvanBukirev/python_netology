@@ -153,3 +153,15 @@ INSERT INTO tracks (title, duration, album_id, track_number) VALUES
 -- Добавляем треки ТОКИО в сборник
 INSERT INTO compilation_tracks (compilation_id, track_id) VALUES
 (3, 6); -- Отель "Токио" в "Новая волна"
+
+-- Связываем альбом "Сольный проект" (album_id = 7) с исполнителем "Порядок слов"
+INSERT INTO album_artists (album_id, artist_id) VALUES
+(7, 5); -- Порядок слов
+
+-- Связываем альбом "Изоляция" (album_id = 8) с исполнителем "Луна"
+INSERT INTO album_artists (album_id, artist_id) VALUES
+(8, 2); -- Луна
+
+-- Добавляем коллаборацию: "Изоляция" также с "Марсианские Будни"
+INSERT INTO album_artists (album_id, artist_id) VALUES
+(8, 6); -- Марсианские Будни

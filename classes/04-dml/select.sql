@@ -65,12 +65,15 @@ JOIN albums a ON t.album_id = a.album_id
 GROUP BY a.title;
 
 --Все исполнители, которые не выпустили альбомы в 2020 году.
+--fixed
 SELECT ar.name AS исполнитель
 FROM artists ar
-LEFT JOIN album_artists aa ON ar.artist_id = aa.artist_id
-LEFT JOIN albums a ON aa.album_id = a.album_id
-WHERE a.release_year != 2020
-GROUP BY ar.name;
+WHERE ar.artist_id NOT IN (
+    SELECT DISTINCT aa.artist_id
+    FROM album_artists aa
+    JOIN albums a ON aa.album_id = a.album_id
+    WHERE a.release_year = 2020
+);
 
 --Названия сборников, в которых присутствует конкретный исполнитель (ТОКИО)
 SELECT DISTINCT c.title AS сборник
