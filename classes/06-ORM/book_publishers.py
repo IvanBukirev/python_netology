@@ -53,7 +53,7 @@ def get_puplisher_sales(publisher_input):
             Sale.price,
             Sale.date_sale)
               .join(Stock, Stock.id_book == Book.id)
-              .join(Shop, Shop.id_stock == Stock.id)
+              .join(Shop, Shop.id == Stock.id_shop)
               .join(Sale, Sale.id_stock == Stock.id)
               .filter(Book.id_publisher == publisher.id)
               .order_by(Sale.date_sale))
