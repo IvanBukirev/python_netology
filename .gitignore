@@ -5,3 +5,4 @@ main.py
 db_crud.py
 config_crud.ini
 *.env
+.requestes_http
