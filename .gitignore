@@ -5,4 +5,4 @@ main.py
 *.py
 db_crud.py
 config_crud.ini
-.env
+*.env
