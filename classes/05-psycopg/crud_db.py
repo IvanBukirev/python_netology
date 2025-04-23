@@ -1,11 +1,17 @@
-import psycopg2
-import configparser
+import os
 
-config = configparser.ConfigParser()
-config.read('config_crud.ini')
+import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv('../../.env')
+
+database_name = os.getenv('DB_NAME_CRUD')
+user_name = os.getenv('USER_NAME')
+password_db = os.getenv('USER_PASSWORD')
 
 
 class DbSqlClient:
+
     def __init__(self, database, user, password):
         self.database = database
         self.user = user
@@ -74,15 +80,15 @@ class DbSqlClient:
 
 def create_db_structure(db_client):
     structure = [
-        {'table_name': 'client',
-         'columns': """(
+            {'table_name': 'client',
+             'columns':    """(
                             id SERIAL PRIMARY KEY,
                             first_name VARCHAR(40) NOT NULL,
                             last_name VARCHAR(40) NOT NULL,
                             email VARCHAR(40) NOT NULL
                         )"""},
-        {'table_name': 'phone',
-         'columns': """(
+            {'table_name': 'phone',
+             'columns':    """(
                             id SERIAL PRIMARY KEY,
                             number VARCHAR(15) NULL,
                             client_id INTEGER NOT NULL REFERENCES client(id)
@@ -126,10 +132,10 @@ def format_info(clients):
     formatted_info = []
     for client in clients:
         client_info = {
-            'client_id': client[0],
-            'first_name': client[1],
-            'last_name': client[2],
-            'email': client[3]
+                'client_id':  client[0],
+                'first_name': client[1],
+                'last_name':  client[2],
+                'email':      client[3]
         }
         formatted_info.append(client_info)
     return formatted_info
@@ -139,9 +145,9 @@ def format_phones(phones):
     formatted_info = []
     for phone in phones:
         phone_info = {
-            'client_id': phone[2],
-            'phone_id': phone[0],
-            'number': phone[1]
+                'client_id': phone[2],
+                'phone_id':  phone[0],
+                'number':    phone[1]
         }
         formatted_info.append(phone_info)
     return formatted_info
@@ -165,7 +171,7 @@ def delete_client(db_client, client_id):
 
 
 if __name__ == '__main__':
-    db_sql_client = DbSqlClient(database='clients', user='postgres', password=config['Passwords']['postgres'])
+    db_sql_client = DbSqlClient(database=database_name, user=user_name, password=password_db)
 
     # db_sql_client.delete_table('client')
     # db_sql_client.delete_table('phone')
