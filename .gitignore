@@ -1,7 +1,7 @@
 
 .venv
 .idea
-main.py
+main2.py
 db_crud.py
 config_crud.ini
 *.env
