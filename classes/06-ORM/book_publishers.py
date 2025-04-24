@@ -12,8 +12,10 @@ load_dotenv('../../.env')
 database_name = os.getenv("DATABASE_NAME")
 user_name = os.getenv("USER_NAME")
 password = os.getenv("USER_PASSWORD")
+db_port = os.getenv("DB_PORT")
+db_host = os.getenv("DB_HOST")
 
-DSN = 'postgresql://{}:{}@localhost:5432/{}'.format(user_name, password, database_name)
+DSN = 'postgresql://{}:{}@{}:{}/{}'.format(user_name, password,db_host, db_port, database_name)
 engine = sq.create_engine(DSN)
 
 create_tables(engine)
@@ -32,14 +34,14 @@ with open('test_data.json', 'r') as f:
                 'stock':     Stock,
                 'sale':      Sale
         }[item.get('model')]
-        model_id = f'{model}_id'
         session.add(model(id=item.get('pk'), **item.get('fields')))
     session.commit()
 
 
 def get_puplisher_sales(publisher_input):
+
     if publisher_input.isdigit():
-        publisher = session.query(Publisher).filter(Publisher.id == publisher_input).first()
+        publisher = session.query(Publisher).filter(Publisher.id == int(publisher_input)).first()
     else:
         publisher = session.query(Publisher).filter(Publisher.name.ilike(f'%{publisher_input}%')).first()
 
@@ -53,7 +55,7 @@ def get_puplisher_sales(publisher_input):
             Sale.price,
             Sale.date_sale)
               .join(Stock, Stock.id_book == Book.id)
-              .join(Shop, Shop.id == Stock.id_shop)
+              .join(Shop, Stock.id_shop==Shop.id )
               .join(Sale, Sale.id_stock == Stock.id)
               .filter(Book.id_publisher == publisher.id)
               .order_by(Sale.date_sale))
@@ -63,9 +65,9 @@ def get_puplisher_sales(publisher_input):
         return
 
     print(f"\nПродажи книг издателя '{publisher.name}':")
-    print("-" * 80)
+    print("-" * 90)
     print(f"{'Название книги':<40} | {'Магазин':<20} | {'Цена':<10} | {'Дата продажи'}")
-    print("-" * 80)
+    print("-" * 90)
     for sale in sales:
         print(f"{sale.book_title:<40} | {sale.shop_name:<20} | {sale.price:<10.2f} | {sale.date_sale.strftime('%Y-%m-%d')}")
 
@@ -75,8 +77,7 @@ session.close()
 
 def demo():
     print("Поиск продаж книг по издателю")
-    print("Введите ID или имя издателя:")
-    publisher_input = input().strip()
+    publisher_input = input('Введите название издателя или его идентификатор:').strip()
     get_puplisher_sales(publisher_input)
 
 if __name__ == "__main__":
