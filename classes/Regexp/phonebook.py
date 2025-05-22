@@ -12,10 +12,10 @@ with open("phonebook_raw.csv", encoding="utf-8") as f:
 # ваш код
 def process_phone(phone):
     if not phone:
-        return ''
-    ext_match = re.search(r'доб\.?\s*(\d+)', phone, re.I)
+        return ""
+    ext_match = re.search(r"доб\.?\s*(\d+)", phone, re.I)
     ext = ext_match.group(1) if ext_match else None
-    digits = re.sub(r'\D', '', phone)
+    digits = re.sub(r"\D", "", phone)
     main_number = f"+7({digits[1:4]}){digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
 
     if ext:
@@ -25,8 +25,8 @@ def process_phone(phone):
 
 
 def process_fio(contact):
-    fio = ' '.join(contact[:3]).split()
-    fio.extend([''] * (3 - len(fio)))
+    fio = " ".join(contact[:3]).split()
+    fio.extend([""] * (3 - len(fio)))
     return fio[:3]
 
 
@@ -35,13 +35,13 @@ for contact in contacts_list[1:]:
     lastname, firstname, surname = process_fio(contact)
     phone = process_phone((contact[5]))
     processed_contact = [
-            lastname,
-            firstname,
-            surname,
-            contact[3],
-            contact[4],
-            phone,
-            contact[6]
+        lastname,
+        firstname,
+        surname,
+        contact[3],
+        contact[4],
+        phone,
+        contact[6],
     ]
     processed_contacts.append(processed_contact)
 
@@ -61,7 +61,7 @@ result_list = [contacts_list[0]] + list(unique_contacts.values())
 # TODO 2: сохраните получившиеся данные в другой файл
 # код для записи файла в формате CSV
 with open("phonebook.csv", "w", encoding="utf-8") as f:
-    datawriter = csv.writer(f, delimiter=',')
+    datawriter = csv.writer(f, delimiter=",")
     # Вместо contacts_list подставьте свой список
     datawriter.writerows(result_list)
 pprint(result_list)
