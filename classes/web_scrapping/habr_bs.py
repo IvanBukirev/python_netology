@@ -18,16 +18,17 @@ KEYWORDS = ["дизайн", "фото", "web", "python"]
 URL = "https://habr.com/ru/articles"
 URL_LINK = "https://habr.com"
 
-response = requests.get(URL)
+
+def generate_headers():
+    headers = Headers(os="win", browser="chrome")
+    return headers.generate()
+
+
+response = requests.get(URL, headers=generate_headers())
 page = bs4.BeautifulSoup(response.text, "lxml")
 tm_articles_list = page.find("div", class_="tm-articles-list")
 articles = tm_articles_list.find_all("article")
 articles_parsed = []
-
-
-def generate_headers():
-    headers = Headers(os="win", browser="chrome")
-
 
 for article in articles:
     time_tag = article.find("time")
@@ -39,10 +40,9 @@ for article in articles:
     article_link = f"{URL_LINK}{a_tag['href']}"
 
     time.sleep(random.randint(1, 5) * random.random() * 0.1)
-    page_response = bs4.BeautifulSoup(
-        requests.get(article_link, headers=generate_headers()).text, "lxml"
-    )
-    body = page_response.find("div", id="post-content-body").text.strip()
+    page_response = requests.get(article_link, headers=generate_headers())
+    page_tag = bs4.BeautifulSoup(page_response.text, "lxml")
+    body = page_tag.find("div", id="post-content-body").text
     article_parsed = {
         "date": article_date,
         "title": article_title,
