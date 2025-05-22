@@ -13,9 +13,10 @@ import requests
 from fake_headers import Headers
 
 ## Определяем список ключевых слов:
-# KEYWORDS = ["дизайн", "фото", "web", "python"]
-KEYWORDS = ["дизайн", "фото", "web", "python", " ИИ"]
+KEYWORDS = ["дизайн", "фото", "web", "python"]
+# KEYWORDS = ["дизайн", "фото", "web", "python", " ИИ"] #Добавил ИИ, чтобы было больше статей
 URL = 'https://habr.com/ru/articles'
+URL_LINK='https://habr.com'
 
 response = requests.get(URL)
 page = bs4.BeautifulSoup(response.text, 'lxml')
@@ -35,13 +36,16 @@ for article in articles:
 
     article_date = time_tag["datetime"]
     article_title = a_tag.text
-    article_link = f"https://habr.com{a_tag["href"]}"
+    article_link = f"{URL_LINK}{a_tag['href']}"
 
-
+    time.sleep(random.randint(1, 5) * random.random() * 0.1)
+    page_response = bs4.BeautifulSoup(requests.get(article_link, headers=generate_headers()).text, 'lxml')
+    body = page_response.find('div', id="post-content-body").text.strip()
     article_parsed = {
             'date':  article_date,
             'title': article_title,
             'link':  article_link,
+            'body': body
 
     }
     articles_parsed.append(article_parsed)
@@ -49,6 +53,6 @@ if __name__ == '__main__':
     for keyword in KEYWORDS:
         print(f"Статьи, содержащие ключевое слово '{keyword}':")
         for article in articles_parsed:
-            if keyword.lower() in article['title'].lower():
+            if keyword.lower() in article['body'].lower():
                 print(f"{article['date']} - {article['title']} - {article['link']}")
         print()
