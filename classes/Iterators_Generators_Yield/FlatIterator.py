@@ -1,8 +1,8 @@
 import types
 
-'''
+"""
 Задача.1 - Итератор по списку списков.
-'''
+"""
 
 
 class FlatIterator:
@@ -29,24 +29,18 @@ class FlatIterator:
 
 
 def test_1():
-    list_of_lists_1 = [
-            ['a', 'b', 'c'],
-            ['d', 'e', 'f', 'h', False],
-            [1, 2, None]
-    ]
+    list_of_lists_1 = [["a", "b", "c"], ["d", "e", "f", "h", False], [1, 2, None]]
 
-    for flat_iterator_item, check_item in zip(
-            FlatIterator(list_of_lists_1),
-            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
-    ):
+    for flat_iterator_item, check_item in zip(FlatIterator(list_of_lists_1),
+                                              ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None], ):
         assert flat_iterator_item == check_item
 
-    assert list(FlatIterator(list_of_lists_1)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
+    assert list(FlatIterator(list_of_lists_1)) == ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None]
 
 
-'''
+"""
 Задача.2 - Генератор по списку списков.
-'''
+"""
 
 
 def flat_generator(list_of_lists):
@@ -56,26 +50,20 @@ def flat_generator(list_of_lists):
 
 
 def test_2():
-    list_of_lists_1 = [
-            ['a', 'b', 'c'],
-            ['d', 'e', 'f', 'h', False],
-            [1, 2, None]
-    ]
+    list_of_lists_1 = [["a", "b", "c"], ["d", "e", "f", "h", False], [1, 2, None]]
 
-    for flat_iterator_item, check_item in zip(
-            flat_generator(list_of_lists_1),
-            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
-    ):
+    for flat_iterator_item, check_item in zip(flat_generator(list_of_lists_1),
+                                              ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None], ):
         assert flat_iterator_item == check_item
 
-    assert list(flat_generator(list_of_lists_1)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
+    assert list(flat_generator(list_of_lists_1)) == ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None]
 
     assert isinstance(flat_generator(list_of_lists_1), types.GeneratorType)
 
 
-'''
+"""
 Задача.3 - Итератор любой вложенности.
-'''
+"""
 
 
 class FlatIteratorAnyLevel:
@@ -102,24 +90,19 @@ class FlatIteratorAnyLevel:
 
 
 def test_3():
-    list_of_lists_2 = [
-            [['a'], ['b', 'c']],
-            ['d', 'e', [['f'], 'h'], False],
-            [1, 2, None, [[[[['!']]]]], []]
-    ]
+    list_of_lists_2 = [[["a"], ["b", "c"]], ["d", "e", [["f"], "h"], False], [1, 2, None, [[[[["!"]]]]], []]]
 
-    for flat_iterator_item, check_item in zip(
-            FlatIteratorAnyLevel(list_of_lists_2),
-            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
-    ):
+    for flat_iterator_item, check_item in zip(FlatIteratorAnyLevel(list_of_lists_2),
+                                              ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None, "!"]):
         assert flat_iterator_item == check_item
 
-    assert list(FlatIteratorAnyLevel(list_of_lists_2)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
+    assert list(FlatIteratorAnyLevel(list_of_lists_2)) == ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None,
+                                                           "!"]
 
 
-'''
+"""
 Задача.4 - Генератор любой вложенности.
-'''
+"""
 
 
 def flat_generator_any_level(list_of_lists):
@@ -131,25 +114,19 @@ def flat_generator_any_level(list_of_lists):
 
 
 def test_4():
-    list_of_lists_2 = [
-            [['a'], ['b', 'c']],
-            ['d', 'e', [['f'], 'h'], False],
-            [1, 2, None, [[[[['!']]]]], []]
-    ]
+    list_of_lists_2 = [[["a"], ["b", "c"]], ["d", "e", [["f"], "h"], False], [1, 2, None, [[[[["!"]]]]], []], ]
 
-    for flat_iterator_item, check_item in zip(
-            flat_generator_any_level(list_of_lists_2),
-            ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None, '!']
-    ):
+    for flat_iterator_item, check_item in zip(flat_generator_any_level(list_of_lists_2),
+                                              ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None, "!"], ):
         assert flat_iterator_item == check_item
 
-    assert list(flat_generator_any_level(list_of_lists_2)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None,
-                                                               '!']
+    assert list(flat_generator_any_level(list_of_lists_2)) == ["a", "b", "c", "d", "e", "f", "h", False, 1, 2, None,
+                                                               "!"]
 
     assert isinstance(flat_generator_any_level(list_of_lists_2), types.GeneratorType)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_1()
     test_2()
     test_3()
