@@ -5,7 +5,7 @@ import pytest
 import requests
 from dotenv import load_dotenv
 
-load_dotenv("../../../.env")
+load_dotenv("../../.env")
 API_URL = "https://cloud-api.yandex.net/v1/disk/resources"
 TOKEN = os.getenv("YANDEX_DISK_TOKEN")
 

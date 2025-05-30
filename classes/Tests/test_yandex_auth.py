@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-load_dotenv("../../../.env")
+load_dotenv("../../.env")
 
 
 class TestYandexAuth(unittest.TestCase):
